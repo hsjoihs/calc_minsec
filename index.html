@@ -11,11 +11,19 @@
         }
         let ans_min = Math.floor(sum_sec / 60);
         let ans_sec = sum_sec % 60;
-        return `${ans_min}:${ans_sec < 10 ? '0' : ''}${ans_sec}`;
+        let ans = `${ans_min}:${ans_sec < 10 ? '0' : ''}${ans_sec}`;
+        if (ans.includes('NaN')) {
+            return '____';
+        } else {
+            return ans;
+        }
     }
 </script>
-<input id="input" type="text" placeholder="1:30 + 2:43"
-    onchange="document.getElementById('output').textContent = parse_and_calc(this.value)">
-<div id="output"></div>
+
+<body>
+    <input style="font-size: 3em;" id="input" type="text" placeholder="1:30 + 2:43"
+        oninput="document.getElementById('output').textContent = parse_and_calc(this.value)">
+    <div id="output" style="font-size: 3em;"></div>
+</body>
 
 </html>
