@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<script>
+    // must default to mm:ss
+    function parse_and_calc(input) {
+        let sum_sec = 0;
+        let parts = input.split('+').map(s => s.trim());
+        for (let part of parts) {
+            let [minutes, seconds] = part.split(':').map(Number);
+            sum_sec += minutes * 60 + seconds;
+        }
+        let ans_min = Math.floor(sum_sec / 60);
+        let ans_sec = sum_sec % 60;
+        return `${ans_min}:${ans_sec < 10 ? '0' : ''}${ans_sec}`;
+    }
+</script>
+<input id="input" type="text" placeholder="1:30 + 2:43"
+    onchange="document.getElementById('output').textContent = parse_and_calc(this.value)">
+<div id="output"></div>
+
+</html>
