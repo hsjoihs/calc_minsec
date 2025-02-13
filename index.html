@@ -2,12 +2,54 @@
 <html>
 <script>
     // must default to mm:ss
+    // BNF:
+    // ```
+    // <input> ::= <time> (<operation> <time>)*
+    // <operation> ::= '+' | '-'
+    // <time> ::= <minutes> ':' <seconds>
+    // <minutes> ::= <digit>*  // allows empty string
+    // <seconds> ::= <digit>*  // allows empty string
+    // ```
+
+    function tokenize(input) {
+        let tokens = [];
+        let i = 0;
+        while (i < input.length) {
+            let c = input[i];
+            if (c === '+' || c === '-') {
+                tokens.push(c);
+                i++;
+            } else {
+                let time = '';
+                while (i < input.length && input[i] !== '+' && input[i] !== '-') {
+                    time += input[i];
+                    i++;
+                }
+                tokens.push(time);
+            }
+        }
+        return tokens;
+    }
+
     function parse_and_calc(input) {
         let sum_sec = 0;
-        let parts = input.split('+').map(s => s.trim());
-        for (let part of parts) {
-            let [minutes, seconds] = part.split(':').map(Number);
-            sum_sec += minutes * 60 + seconds;
+        const time_or_ops = tokenize(input);
+        let i = 0;
+        while (i < time_or_ops.length) {
+            let time = time_or_ops[i];
+            let [minutes, seconds] = time.split(':').map(Number);
+            let time_sec = minutes * 60 + seconds;
+            if (i === 0) {
+                sum_sec = time_sec;
+            } else {
+                let op = time_or_ops[i - 1];
+                if (op === '+') {
+                    sum_sec += time_sec;
+                } else if (op === '-') {
+                    sum_sec -= time_sec;
+                }
+            }
+            i += 2;
         }
         let ans_min = Math.floor(sum_sec / 60);
         let ans_sec = sum_sec % 60;
@@ -21,7 +63,7 @@
 </script>
 
 <body>
-    <input style="font-size: 3em;" id="input" type="text" placeholder="1:30 + 2:43"
+    <input style="font-size: 3em;" id="input" type="text" placeholder="1:30 + 2:43 - :30"
         oninput="document.getElementById('output').textContent = parse_and_calc(this.value)">
     <div id="output" style="font-size: 3em;"></div>
 </body>

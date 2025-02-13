@@ -1,2 +1,2 @@
 # calc_minsec
-I need to add a bunch of mm:ss
+I need to add/subtract a bunch of mm:ss
